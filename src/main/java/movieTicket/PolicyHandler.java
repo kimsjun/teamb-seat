@@ -20,12 +20,11 @@ public class PolicyHandler{
     public void wheneverPaymentSucceed_BookSeat(@Payload PaymentSucceeded paymentSucceeded){
 
         if(paymentSucceeded.isMe()){
-            Seat seat = new Seat();
-            seat.setBookingId(paymentSucceeded.getBookingId());
-            seat.setSeatId((long) 111);
-            seat.setSeatStatus("bookedSeat!!");
-
-            seatRepository.save(seat);
+            seatRepository.findById(Long.valueOf(paymentSucceeded.getSeatId())).ifPresent((seat)->{
+                seat.setBookingId(paymentSucceeded.getBookingId());
+                seat.setSeatStatus("bookedSeat!!");
+                seatRepository.save(seat);
+            });
 
             System.out.println("##### listener BookSeat : " + paymentSucceeded.toJson());
         }
@@ -34,12 +33,11 @@ public class PolicyHandler{
     public void wheneverUnbooked_UnbookeSeat(@Payload Unbooked unbooked){
 
         if(unbooked.isMe()){
-            Seat seat = new Seat();
-            unbooked.setBookingId(unbooked.getBookingId());
-            seat.setSeatId((long) 111);
-            seat.setSeatStatus("unbookedSeat!!");
-
-            seatRepository.save(seat);
+            seatRepository.findById(Long.valueOf(unbooked.getSeatId())).ifPresent((seat)->{
+                seat.setBookingId(0L);
+                seat.setSeatStatus("unbookedSeat!!");
+                seatRepository.save(seat);
+            });
             System.out.println("##### listener UnbookeSeat : " + unbooked.toJson());
         }
     }
