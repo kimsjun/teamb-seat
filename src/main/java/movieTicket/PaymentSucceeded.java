@@ -7,6 +7,16 @@ public class PaymentSucceeded extends AbstractEvent {
     private Long bookingId;
     private String paymentStatus;
 
+    public Long getSeatId() {
+        return seatId;
+    }
+
+    public void setSeatId(Long seatId) {
+        this.seatId = seatId;
+    }
+
+    private Long seatId;
+
     public Long getPaymentId() {
         return paymentId;
     }
